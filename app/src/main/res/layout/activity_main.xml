@@ -11,9 +11,62 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/bglogin"
     android:alpha="0.5"
-    tools:context="com.rskbeck.ping.MainActivity">
+    tools:context="com.rskbeck.ping.MainActivity"
+    android:weightSum="1">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
 
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logo"
+        android:layout_gravity="center"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PING"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:gravity="center|top"
+        android:textSize="62dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:text="Make Life Easier"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:layout_weight="0.11" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_weight="0.13" />
+
+    <ImageView
+        android:layout_width="290dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:src="@drawable/subutton"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_weight="0.05" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="280dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:clickable="true" />
 
 </LinearLayout>
