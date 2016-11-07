@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/bglogin"
     android:alpha="0.5"
-    tools:context="com.rskbeck.ping.MainActivity"
+    tools:context="edu.calpoly.xyanrkeh.ping.MainActivity"
     android:weightSum="1">
 
     <TextView

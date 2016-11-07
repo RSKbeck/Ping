@@ -1,4 +1,4 @@
-package com.rskbeck.ping;
+package edu.calpoly.xyanrkeh.ping;
 
 import org.junit.Test;
 

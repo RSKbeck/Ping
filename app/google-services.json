@@ -52,17 +52,17 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:770224998808:android:71380ae24fc9cde4",
+        "mobilesdk_app_id": "1:770224998808:android:602ebfc8b7f827dd",
         "android_client_info": {
-          "package_name": "com.rskbeck.ping"
+          "package_name": "edu.calpoly.xyanrkeh.ping"
         }
       },
       "oauth_client": [
         {
-          "client_id": "770224998808-6gr3i7p8v971i5ojnk3oadhf0gnuughf.apps.googleusercontent.com",
+          "client_id": "770224998808-41jtqgsspi5q6er9q9rhbjm4epk5gr5b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.rskbeck.ping",
+            "package_name": "edu.calpoly.xyanrkeh.ping",
             "certificate_hash": "8047EACEB7FF789CEAE169B7029DB2788BD7B4B6"
           }
         },

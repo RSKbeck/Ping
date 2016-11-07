@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
     defaultConfig {
-        applicationId "com.rskbeck.ping"
+        applicationId "edu.calpoly.xyanrkeh.ping"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
@@ -25,9 +25,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.google.firebase:firebase-auth:9.8.0'
     compile 'com.google.firebase:firebase-database:9.8.0'
     compile 'com.google.android.gms:play-services:9.8.0'
-    compile 'com.google.firebase:firebase-auth:9.8.0'
     compile 'com.google.android.gms:play-services-auth:9.8.0'
     testCompile 'junit:junit:4.12'
 }

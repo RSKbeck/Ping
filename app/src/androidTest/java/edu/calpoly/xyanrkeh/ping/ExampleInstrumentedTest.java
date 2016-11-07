@@ -1,4 +1,4 @@
-package com.rskbeck.ping;
+package edu.calpoly.xyanrkeh.ping;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
