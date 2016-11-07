@@ -10,12 +10,25 @@
     <Button
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_gravity="right|bottom"
+        android:layout_gravity="center|bottom"
+        android:id="@+id/maps_button"
         android:background="@drawable/round_button"
         android:text="+"
         android:layout_marginRight = "10dip"
         android:layout_marginBottom = "10dip"
         android:textStyle="bold"
         android:textColor="#FFF"/>
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="right|top"
+        android:id="@+id/menu"
+        android:background="@drawable/listicon"
+        android:layout_marginRight = "10dip"
+        android:layout_marginTop = "10dip"
+        android:textStyle="bold"
+        android:textColor="#FFF"/>
+
 
 </fragment>
