@@ -34,7 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        findViewById(R.id.sign_in_button).setOnClickListener((View.OnClickListener) this);
+        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signInGoogle();
+            }
+        });
 
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -63,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d("LOGINLOG", "onAuthStateChanged:signed_in:" + user.getUid());
+                    Intent mapInt = new Intent(MainActivity.this, MapsActivity.class);
+                    startActivity(mapInt);
                 } else {
                     // User is signed out
                     Log.d("LOGINLOG", "onAuthStateChanged:signed_out");
