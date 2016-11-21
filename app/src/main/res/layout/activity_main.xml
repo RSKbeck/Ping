@@ -51,11 +51,12 @@
         android:layout_height="30dp"
         android:layout_weight="0.13" />
 
-    <ImageView
-        android:layout_width="290dp"
-        android:layout_height="45dp"
+    <Button
+        android:id="@+id/sign_up"
+        android:layout_width="270dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
-        android:src="@drawable/subutton"/>
+        android:background="@drawable/subutton"/>
 
     <TextView
         android:layout_width="match_parent"
