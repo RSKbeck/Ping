@@ -28,7 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -65,7 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.3050, -120.6625),15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.3050, -120.6625), 15));
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -115,12 +115,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    try{
+                    try {
 
                         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                                 mGoogleApiClient);
-                    }
-                    catch(SecurityException ex) {
+                    } catch (SecurityException ex) {
                         Log.d("MAPLOG ERROR", "SECURITY EXCEPTION");
                     }
 
@@ -155,27 +154,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onClick(View v) {
-            switch (v.getId()) {
-                    case R.id.menu:
-                            //Creating the instance of PopupMenu
-                                    PopupMenu popup = new PopupMenu(this, (Button) findViewById(R.id.menu));
-                            //Inflating the Popup using xml file
-                                    popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+        switch (v.getId()) {
+            case R.id.menu:
+                //Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(this, (Button) findViewById(R.id.menu));
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
 
-                                    //registering popup with OnMenuItemClickListener
-                                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                                    public boolean onMenuItemClick(MenuItem item) {
-                                                            Log.d("MENU", "You Clicked: " + item.getTitle());
-                                                            return true;
-                                                        }
-                                                });
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Log.d("MENU", "You Clicked: " + item.getTitle());
+                        return true;
+                    }
+                });
 
-                                    popup.show(); //showing popup menu
-                            break;
-                    case R.id.maps_button:
-                            break;
-                    default:
-                            break;
-                }
+                popup.show(); //showing popup menu
+                break;
+            case R.id.maps_button:
+                break;
+            default:
+                break;
         }
+    }
 }
