@@ -125,9 +125,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String email = mAuth.getCurrentUser().getEmail();
-                            EventList.push(EventList.add(input.getText().toString().trim(),
+                            Event evt = new Event(input.getText().toString().trim(),
                                     "desc", Calendar.getInstance().getTimeInMillis(), email,
-                                    latLng));
+                                    latLng.latitude, latLng.longitude);
+                            EventList.events.put(evt.getID(), evt);
+                            EventList.push(evt.getID());
                             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.maps_button);
                             fab.setImageResource(R.drawable.ic_add_white_24dp);
                             isAdding = false;
