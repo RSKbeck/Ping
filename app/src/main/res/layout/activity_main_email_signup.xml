@@ -50,7 +50,7 @@
 
     <EditText
         android:id="@+id/sign_up_email_field"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#FFFFFF"/>
 
@@ -63,7 +63,7 @@
 
     <EditText
         android:id="@+id/sign_up_password_field"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:inputType="textPassword"
         android:background="#FFFFFF"/>
@@ -80,6 +80,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
             android:text="SIGN UP"/>
+
+        <Button
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:text="SIGN IN" />
         <Button
             android:id="@+id/sign_up_cancel_button"
             android:layout_width="match_parent"

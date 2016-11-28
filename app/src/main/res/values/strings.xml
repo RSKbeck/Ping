@@ -2,4 +2,10 @@
     <string name="app_name">Ping</string>
     <string name="title_activity_maps">Map</string>
     <string name="my_web_client_id">770224998808-cd9lg3vn3tanhs1ubrvcbj19m64lhomi.apps.googleusercontent.com</string>
+    <string name="title_activity_signup">Sign Up</string>
+    <string name="ok">OK</string>
+    <string name="invalid">Invalid Password</string>
+    <string name="invalid_email">Invalid Email Address</string>
+    <string name="title_activity_list">Ping List</string>
+    <string name="title_activity_detail">Event Detail</string>
 </resources>
