@@ -39,6 +39,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Calendar;
 
@@ -55,17 +56,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseAuth mAuth;
     private ArrayMap<String, String> circleMap;
     private boolean isAdding;
-
+    private boolean showDescriptionPanel;
+    private SlidingUpPanelLayout mLayout;
+    private TextView mSlideUpTitle;
+    private TextView mSlideUpUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         isAdding = false;
-
+        showDescriptionPanel = false;
         mDatabase = FirebaseDatabase.getInstance().getReference("events");
         mAuth = FirebaseAuth.getInstance();
         circleMap = new ArrayMap<String, String>();
+
+        //Sliding Up Bar Setup
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        mSlideUpTitle = (TextView) findViewById(R.id.name);
+        mSlideUpUser = (TextView) findViewById(R.id.by_user);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -113,6 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(final LatLng latLng) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 if (isAdding) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
                     builder.setTitle("Title");
@@ -156,6 +167,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Event evt = EventList.events.get(id);
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(evt.getTime());
+
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                mSlideUpTitle.setText(evt.getTitle());
+                mSlideUpUser.setText("By: " + evt.getCreator() + "\nAt: " + cal.getTime().toString() + "\n\n" + evt.getDetails());
+
+
+                /*
                 AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
                 builder.setTitle(evt.getTitle());
                 TextView desc = new TextView(builder.getContext());
@@ -169,6 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
                 builder.show();
+                */
             }
         });
 
