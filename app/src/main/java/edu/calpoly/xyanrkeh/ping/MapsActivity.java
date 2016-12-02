@@ -13,9 +13,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -44,7 +47,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.Calendar;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final String TAG = "MAPSLOG";
     private GoogleMap mMap;
@@ -70,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mDatabase = FirebaseDatabase.getInstance().getReference("events");
         mAuth = FirebaseAuth.getInstance();
         circleMap = new ArrayMap<String, String>();
-
+        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
         //Sliding Up Bar Setup
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -82,7 +85,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         FloatingActionButton mEvents = (FloatingActionButton) findViewById(R.id.maps_button);
-        Button mSettings = (Button) findViewById(R.id.menu);
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
@@ -95,7 +97,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Button Listener
         mEvents.setOnClickListener(this);
-        mSettings.setOnClickListener(this);
 
         mDatabase.addValueEventListener(new ValueEventListener() {
 
@@ -270,28 +271,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.popup_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_list: {
+                Intent list = new Intent(MapsActivity.this, ListActivity.class);
+                startActivity(list);
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.menu:
-                //Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(this, (Button) findViewById(R.id.menu));
-                //Inflating the Popup using xml file
-                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        Log.d("MENU", "You Clicked: " + item.getTitle());
-                        if (item.getTitle().equals("List")) {
-                            Intent list = new Intent(MapsActivity.this, ListActivity.class);
-                            startActivity(list);
-                        }
-                        return true;
-                    }
-                });
-
-                popup.show(); //showing popup menu
-                break;
             case R.id.maps_button:
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.maps_button);
                 isAdding = !isAdding;
