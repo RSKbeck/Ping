@@ -1,34 +1,83 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.calpoly.xyanrkeh.ping.MapsActivity">
+    xmlns:sothree="http://schemas.android.com/tools"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="true"
+    sothree:umanoScrollableView="@+id/list">
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:id="@+id/maps_button"
-        android:src="@drawable/ic_add_white_24dp"
-        map:fabSize="normal"
-        android:layout_marginRight = "10dip"
-        android:layout_marginBottom = "10dip"
-        android:textStyle="bold"
-        android:textColor="#FFF" />
+    <!-- Main Layout -->
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="right|top"
-        android:id="@+id/menu"
-        android:background="@drawable/listicon"
-        android:layout_marginRight = "10dip"
-        android:layout_marginTop = "10dip"
-        android:textStyle="bold"
-        android:textColor="#FFF"/>
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:id="@+id/maps_button"
+            android:src="@drawable/ic_add_white_24dp"
+            map:fabSize="normal"
+            android:layout_marginRight = "10dip"
+            android:layout_marginBottom = "10dip"
+            android:textStyle="bold"
+            android:textColor="#FFF" />
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="right|top"
+            android:id="@+id/menu"
+            android:background="@drawable/listicon"
+            android:layout_marginRight = "10dip"
+            android:layout_marginTop = "10dip"
+            android:textStyle="bold"
+            android:textColor="#FFF"/>
 
 
-</fragment>
+    </fragment>
+
+    <!-- SLIDING LAYOUT -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="false"
+        android:id="@+id/dragView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"/>
+
+            <Button
+                android:id="@+id/follow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="14sp"
+                android:gravity="center_vertical|right"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
