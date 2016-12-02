@@ -85,6 +85,7 @@ public class Event {
 
     public String getID() {
         String result;
+        String user = creator.substring(0, creator.indexOf("@"));
         if (title.contains(" ")) {
             result = title.substring(0, title.indexOf(" "));
         } else if (title.contains("_")) {
@@ -93,7 +94,11 @@ public class Event {
             result = title;
         }
 
-        result += creator.substring(0, creator.indexOf("@")) + time.getTimeInMillis();
+        if (user.contains(".")) {
+            user = user.substring(0, user.indexOf("."));
+        }
+
+        result += user + time.getTimeInMillis();
 
         return result;
     }

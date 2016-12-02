@@ -23,6 +23,7 @@ public class EventList {
 
     public static String add(String ttl, String dtls, long tme, String crtr, LatLng loc) {
         String id;
+        String user = crtr.substring(0, crtr.indexOf("@"));
         if (ttl.contains(" ")) {
             id = ttl.substring(0, ttl.indexOf(" "));
         } else if (ttl.contains("_")) {
@@ -31,7 +32,11 @@ public class EventList {
             id = ttl;
         }
 
-        id += crtr.substring(0, crtr.indexOf("@")) + tme;
+        if (user.contains(".")) {
+            user = user.substring(0, user.indexOf("."));
+        }
+
+        id += user + tme;
 
         events.put(id, new Event(ttl, dtls, tme, crtr, loc.latitude, loc.longitude));
         return id;
