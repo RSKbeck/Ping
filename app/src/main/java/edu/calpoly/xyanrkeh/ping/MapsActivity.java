@@ -76,6 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mSlideUpTitle = (TextView) findViewById(R.id.name);
         mSlideUpUser = (TextView) findViewById(R.id.by_user);
+        mLayout.setAnchorPoint(.7f);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
