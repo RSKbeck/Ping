@@ -98,8 +98,12 @@ public class Event {
             user = user.substring(0, user.indexOf("."));
         }
 
-        result += user + time.getTimeInMillis();
+        if (user.contains(".")) {
+            user = user.substring(0, user.indexOf("."));
 
+        }
+
+        result += user + time.getTimeInMillis();
         return result;
     }
 }
