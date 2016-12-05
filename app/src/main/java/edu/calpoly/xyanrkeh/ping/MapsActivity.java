@@ -59,7 +59,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FirebaseAuth mAuth;
     private ArrayMap<String, String> circleMap;
     private boolean isAdding;
-    private boolean showDescriptionPanel;
     private SlidingUpPanelLayout mLayout;
     private TextView mSlideUpTitle;
     private TextView mSlideUpUser;
@@ -69,11 +68,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         isAdding = false;
-        showDescriptionPanel = false;
+
         mDatabase = FirebaseDatabase.getInstance().getReference("events");
         mAuth = FirebaseAuth.getInstance();
         circleMap = new ArrayMap<String, String>();
-        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
+
         //Sliding Up Bar Setup
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -82,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLayout.setAnchorPoint(.7f);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         FloatingActionButton mEvents = (FloatingActionButton) findViewById(R.id.maps_button);
@@ -123,6 +123,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.3050, -120.6625), 15));
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            //Listener onClick anywhere on the map
             @Override
             public void onMapClick(final LatLng latLng) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -161,6 +162,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        //Circle Location Click Listener
         mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
             @Override
             public void onCircleClick(Circle circle) {
@@ -175,21 +177,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mSlideUpUser.setText("By: " + evt.getCreator() + "\nAt: " + cal.getTime().toString() + "\n\n" + evt.getDetails());
 
 
-                /*
-                AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-                builder.setTitle(evt.getTitle());
-                TextView desc = new TextView(builder.getContext());
-                desc.setText("By: " + evt.getCreator() + "\nAt: " + cal.getTime().toString() + "\n\n" + evt.getDetails());
-                desc.setPadding(100, 100, 100, 100);
-                builder.setView(desc);
-                builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.show();
-                */
             }
         });
 
@@ -206,8 +193,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 loca = new LatLng(EventList.events.get(EventList.events.keyAt(ind)).getLatitude(),
                         EventList.events.get(EventList.events.keyAt(ind)).getLongitude());
                 if (bounds.contains(loca)) {
-                    circleMap.put(mMap.addCircle(new CircleOptions().center(loca).fillColor(Color.GREEN)
-                                    .strokeColor(Color.YELLOW).radius(30.0).clickable(true).zIndex(3)).getId(),
+                    circleMap.put(mMap.addCircle(new CircleOptions().center(loca).fillColor(0x708190)
+                                    .strokeColor(0x5B7081).radius(30.0).clickable(true).zIndex(3)).getId(),
                             EventList.events.keyAt(ind));
                 }
             }
@@ -302,7 +289,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.clear();
                     fab.setImageResource(R.drawable.ic_cancel_white_24dp);
                 }
-
                 break;
             default:
                 break;

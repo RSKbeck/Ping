@@ -2,5 +2,23 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#c7888a</color>
+
+
+
+
+    <color name="schemeRed">#c7888a</color>
+    <color name="schemeBlue">#5B7081</color>
+
+    <color name="schemeGreen">#72A26F</color>
+    <color name="schemeGreenv1">#5B9258</color>
+    <color name="schemeGreenv2">#669A63</color>
+    <color name="schemeGreenv3">#7EAB7C</color>
+    <color name="schemeGreenv4">#8BB589</color>
+
+    <color name="schemeLGreen">#BAC385</color>
+    <color name="schemeLGreenv1">#A5AF6A</color>
+    <color name="schemeLGreenv2">#B0B977</color>
+    <color name="schemeLGreenv3">#C6CE94</color>
+    <color name="schemeLGreenv4">#D2D9A4</color>
 </resources>
