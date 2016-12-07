@@ -287,6 +287,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.maps_button);
                 isAdding = !isAdding;
                 if (!isAdding) {
+                    fab.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
                     fab.setImageResource(R.drawable.ic_add_white_24dp);
                     redrawCircles();
                 } else {
