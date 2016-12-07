@@ -294,7 +294,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.clear();
                     fab.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
                     fab.setImageResource(R.drawable.ic_close_white_24dp);
-
                 }
                 break;
             default:
