@@ -193,8 +193,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 loca = new LatLng(EventList.events.get(EventList.events.keyAt(ind)).getLatitude(),
                         EventList.events.get(EventList.events.keyAt(ind)).getLongitude());
                 if (bounds.contains(loca)) {
-                    circleMap.put(mMap.addCircle(new CircleOptions().center(loca).fillColor(0x708190)
-                                    .strokeColor(0x5B7081).radius(30.0).clickable(true).zIndex(3)).getId(),
+                    circleMap.put(mMap.addCircle(new CircleOptions().center(loca).fillColor(Color.GREEN)
+                                    .strokeColor(Color.YELLOW).radius(30.0).clickable(true).zIndex(3)).getId(),
                             EventList.events.keyAt(ind));
                 }
             }
