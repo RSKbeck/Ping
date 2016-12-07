@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -84,8 +85,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        FloatingActionButton mEvents = (FloatingActionButton) findViewById(R.id.maps_button);
 
+        FloatingActionButton mEvents = (FloatingActionButton) findViewById(R.id.maps_button);
+        ((Toolbar) findViewById(R.id.main_toolbar)).setTitleTextColor(Color.WHITE);
+        ((Toolbar) findViewById(R.id.main_toolbar)).setSubtitleTextColor(Color.WHITE);
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -184,6 +187,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void redrawCircles() {
+
         mMap.clear();
         circleMap.clear();
         if (!isAdding) {
@@ -193,8 +197,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 loca = new LatLng(EventList.events.get(EventList.events.keyAt(ind)).getLatitude(),
                         EventList.events.get(EventList.events.keyAt(ind)).getLongitude());
                 if (bounds.contains(loca)) {
-                    circleMap.put(mMap.addCircle(new CircleOptions().center(loca).fillColor(Color.GREEN)
-                                    .strokeColor(Color.YELLOW).radius(30.0).clickable(true).zIndex(3)).getId(),
+                    circleMap.put(mMap.addCircle(new CircleOptions().center(loca).fillColor(Color.parseColor("#72A26F"))
+                                    .strokeColor(Color.parseColor("#BAC385")).radius(30.0).clickable(true).zIndex(3)).getId(),
                             EventList.events.keyAt(ind));
                 }
             }
@@ -287,7 +291,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     redrawCircles();
                 } else {
                     mMap.clear();
-                    fab.setImageResource(R.drawable.ic_cancel_white_24dp);
+                    fab.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
+                    fab.setImageResource(R.drawable.ic_close_white_24dp);
+
                 }
                 break;
             default:
