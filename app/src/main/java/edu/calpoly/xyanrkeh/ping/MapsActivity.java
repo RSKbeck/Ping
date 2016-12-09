@@ -5,26 +5,26 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,7 +37,6 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +45,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -63,6 +64,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isAdding;
     private SlidingUpPanelLayout mLayout;
     private TextView mSlideUpTitle;
+    private LatLngBounds CALPOLY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mDatabase = FirebaseDatabase.getInstance().getReference("events");
         mAuth = FirebaseAuth.getInstance();
         circleMap = new ArrayMap<String, String>();
+
+        CALPOLY = new LatLngBounds(new LatLng(35.297855, -120.680319), new LatLng(35.313026, -120.649780));
 
         //If Two Panel
         if (findViewById(R.id.item_detail_container) != null) {
@@ -88,7 +92,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mSlideUpTitle = (TextView) findViewById(R.id.name);
-        mLayout.setAnchorPoint(.7f);
+        mLayout.setAnchorPoint(.65f);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
@@ -129,11 +133,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getExtras() != null) {
+            showPanel(intent.getExtras().getString(EventList.ARG_ITEM_ID), SlidingUpPanelLayout.PanelState.ANCHORED);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        redrawCircles();
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.3050, -120.6625), 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.3050, -120.6625), 16));
+        mMap.setLatLngBoundsForCameraTarget(CALPOLY);
+        mMap.setMinZoomPreference(15);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             //Listener onClick anywhere on the map
             @Override
@@ -141,25 +161,60 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 if (isAdding) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-                    builder.setTitle("Title");
+                    Calendar now = Calendar.getInstance();
+                    builder.setTitle("New Ping");
+                    final View editMode = getLayoutInflater().inflate(R.layout.edit_item_layout, null);
+                    ((TextView) editMode.findViewById(R.id.edit_creator)).setText("Creator: "
+                            + mAuth.getCurrentUser().getEmail());
+                    DatePicker datepick = (DatePicker) editMode.findViewById(R.id.edit_date);
+                    datepick.updateDate(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                    datepick.setMinDate(now.getTimeInMillis());
 
-                    final EditText input = new EditText(MapsActivity.this);
-                    input.setInputType(InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-                    builder.setView(input);
+                    TimePicker timepick = (TimePicker) editMode.findViewById(R.id.edit_time);
+                    if (Build.VERSION.SDK_INT < 23) {
+                        timepick.setCurrentHour(now.get(Calendar.HOUR));
+                        timepick.setCurrentMinute(now.get(Calendar.MINUTE));
+                    } else {
+                        timepick.setHour(now.get(Calendar.HOUR));
+                        timepick.setMinute(now.get(Calendar.MINUTE));
+                    }
+                    builder.setView(editMode);
 
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String email = mAuth.getCurrentUser().getEmail();
-                            Event evt = new Event(input.getText().toString().trim(),
-                                    "desc", Calendar.getInstance().getTimeInMillis(), email,
-                                    latLng.latitude, latLng.longitude);
+
+                            DatePicker datePicker = (DatePicker) editMode.findViewById(R.id.edit_date);
+                            TimePicker timePicker = (TimePicker) editMode.findViewById(R.id.edit_time);
+
+                            int hour;
+                            int minute;
+                            if (Build.VERSION.SDK_INT < 23) {
+                                hour = timePicker.getCurrentHour();
+                                minute = timePicker.getCurrentMinute();
+                            } else {
+                                hour = timePicker.getHour();
+                                minute = timePicker.getMinute();
+                            }
+                            Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                                    datePicker.getMonth(),
+                                    datePicker.getDayOfMonth(),
+                                    hour,
+                                    minute);
+
+                            Event evt = new Event(((EditText) editMode.findViewById(R.id.edit_title))
+                                    .getText().toString().trim(),
+                                    ((EditText) editMode.findViewById(R.id.edit_desc))
+                                            .getText().toString(), calendar.getTimeInMillis(),
+                                    email, latLng.latitude, latLng.longitude);
                             EventList.events.put(evt.getID(), evt);
                             EventList.push(evt.getID());
                             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.maps_button);
                             fab.setImageResource(R.drawable.ic_add_white_24dp);
                             isAdding = false;
                             redrawCircles();
+                            dialog.dismiss();
                         }
                     });
                     builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -174,45 +229,145 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                redrawCircles();
+            }
+        });
+
         //Circle Location Click Listener
         mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
             @Override
             public void onCircleClick(Circle circle) {
-                Log.d(TAG, "Circle was clicked");
                 String id = circleMap.get(circle.getId());
-                Event evt = EventList.events.get(id);
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(evt.getTime());
-
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                mSlideUpTitle.setText(evt.getTitle());
-                ((TextView) findViewById(R.id.slide_creator)).setText("Creator: " + evt.getCreator());
-                ((TextView) findViewById(R.id.slide_time)).setText("\nTime: " + evt.getTime());
-                ((TextView) findViewById(R.id.slide_latitude)).setText("\nLatitude: " + evt.getLatitude());
-                ((TextView) findViewById(R.id.slide_creator)).setText("Longitude: " + evt.getLongitude());
-                ((TextView) findViewById(R.id.slide_description)).setText("\nDescription: " + evt.getDetails());
-
-
+                showPanel(id, SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         });
-
+        mapReady = true;
         redrawCircles();
     }
 
-    private void redrawCircles() {
+    private void showPanel(String id, SlidingUpPanelLayout.PanelState state) {
+        final String evtID = id;
+        Event evt = EventList.events.get(id);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(evt.getLatitude(), evt.getLongitude())));
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(evt.getTime());
 
-        mMap.clear();
-        circleMap.clear();
-        if (!isAdding) {
-            LatLng loca;
-            for (int ind = 0; ind < EventList.events.size(); ind++) {
+        if (mAuth.getCurrentUser().getEmail().equals(evt.getCreator())) {
+            ((ImageButton) findViewById(R.id.edit_button)).setVisibility(View.VISIBLE);
+            ((ImageButton) findViewById(R.id.edit_button)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    editDialog(evtID);
+                }
+            });
+        } else {
+            ((ImageButton) findViewById(R.id.edit_button)).setVisibility(View.GONE);
+        }
+
+        mLayout.setPanelState(state);
+        mSlideUpTitle.setText(evt.getTitle());
+        ((TextView) findViewById(R.id.slide_creator)).setText("Creator: " + evt.getCreator());
+        ((TextView) findViewById(R.id.slide_time)).setText("\n" + formatTime(cal));
+        ((TextView) findViewById(R.id.slide_description)).setText("\n" + evt.getDetails());
+    }
+
+    private void editDialog(String id) {
+        Event evt = EventList.events.get(id);
+        final String evtID = id;
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        Calendar tme = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        tme.setTimeInMillis(evt.getTime());
+        builder.setTitle("Edit Ping");
+        final View editMode = getLayoutInflater().inflate(R.layout.edit_item_layout, null);
+
+        ((EditText) editMode.findViewById(R.id.edit_title)).setText(evt.getTitle());
+        ((TextView) editMode.findViewById(R.id.edit_creator)).setText("Creator: "
+                + evt.getCreator());
+        ((EditText) editMode.findViewById(R.id.edit_desc)).setText(evt.getDetails());
+
+        DatePicker datepick = (DatePicker) editMode.findViewById(R.id.edit_date);
+        datepick.updateDate(tme.get(Calendar.YEAR), tme.get(Calendar.MONTH), tme.get(Calendar.DAY_OF_MONTH));
+        datepick.setMinDate(now.getTimeInMillis());
+
+        TimePicker timepick = (TimePicker) editMode.findViewById(R.id.edit_time);
+        if (Build.VERSION.SDK_INT < 23) {
+            timepick.setCurrentHour(tme.get(Calendar.HOUR));
+            timepick.setCurrentMinute(tme.get(Calendar.MINUTE));
+        } else {
+            timepick.setHour(tme.get(Calendar.HOUR));
+            timepick.setMinute(tme.get(Calendar.MINUTE));
+        }
+        builder.setView(editMode);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String email = mAuth.getCurrentUser().getEmail();
+
+                DatePicker datePicker = (DatePicker) editMode.findViewById(R.id.edit_date);
+                TimePicker timePicker = (TimePicker) editMode.findViewById(R.id.edit_time);
+
+                int hour;
+                int minute;
+                if (Build.VERSION.SDK_INT < 23) {
+                    hour = timePicker.getCurrentHour();
+                    minute = timePicker.getCurrentMinute();
+                } else {
+                    hour = timePicker.getHour();
+                    minute = timePicker.getMinute();
+                }
+                Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                        datePicker.getMonth(),
+                        datePicker.getDayOfMonth(),
+                        hour,
+                        minute);
+
+                EventList.events.get(evtID).setTitle(((EditText) editMode.findViewById(R.id.edit_title))
+                        .getText().toString().trim());
+                EventList.events.get(evtID).setDetails(((EditText) editMode.findViewById(R.id.edit_desc))
+                        .getText().toString());
+                EventList.events.get(evtID).setTime(calendar.getTimeInMillis());
+
+                EventList.push(evtID);
+                redrawCircles();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private String formatTime(Calendar cal) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm a");
+        return sdf.format(cal.getTime());
+    }
+
+    private void redrawCircles() {
+        if (mapReady) {
+            mMap.clear();
+            circleMap.clear();
+            if (!isAdding) {
+                LatLng loca;
                 LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-                loca = new LatLng(EventList.events.get(EventList.events.keyAt(ind)).getLatitude(),
-                        EventList.events.get(EventList.events.keyAt(ind)).getLongitude());
-                if (bounds.contains(loca)) {
-                    circleMap.put(mMap.addCircle(new CircleOptions().center(loca).fillColor(Color.parseColor("#72A26F"))
-                                    .strokeColor(Color.parseColor("#BAC385")).radius(30.0).clickable(true).zIndex(3)).getId(),
-                            EventList.events.keyAt(ind));
+                for (int ind = 0; ind < EventList.events.size(); ind++) {
+                    loca = new LatLng(EventList.events.get(EventList.events.keyAt(ind)).getLatitude(),
+                            EventList.events.get(EventList.events.keyAt(ind)).getLongitude());
+                    if (bounds.contains(loca)) {
+                        circleMap.put(mMap.addCircle(new CircleOptions().center(loca).fillColor(Color.parseColor("#72A26F"))
+                                        .strokeColor(Color.parseColor("#BAC385")).radius(30.0).clickable(true).zIndex(3)).getId(),
+                                EventList.events.keyAt(ind));
+                    }
                 }
             }
         }
@@ -241,11 +396,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                                 mGoogleApiClient);
                     } catch (SecurityException ex) {
-                        Log.d("MAPLOG ERROR", "SECURITY EXCEPTION");
+                        ex.printStackTrace();
                     }
 
                 } else {
-                    Log.d("MAPLOG", "COULD NOT GET LOCATION PERMISSION");
                     mLastLocation = new Location("rskbeck");
                     mLastLocation.setLatitude(35.3050);
                     mLastLocation.setLongitude(120.6625);

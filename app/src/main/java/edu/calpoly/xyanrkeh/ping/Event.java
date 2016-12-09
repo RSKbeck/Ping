@@ -95,7 +95,7 @@ public class Event {
         }
 
         if (user.contains(".")) {
-            user = user.substring(0, user.indexOf("."));
+            user = user.replaceAll(".", "");
         }
 
         if (user.contains(".")) {

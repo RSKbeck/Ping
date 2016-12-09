@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 
 public class EventList {
+    public static final String ARG_ITEM_ID = "eventid";
     public static ArrayMap<String, Event> events;
     //public static ArrayList<Task> tasks;
 
@@ -33,7 +34,7 @@ public class EventList {
         }
 
         if (user.contains(".")) {
-            user = user.substring(0, user.indexOf("."));
+            user = user.replaceAll(".", "");
         }
 
         id += user + tme;

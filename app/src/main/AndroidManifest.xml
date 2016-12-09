@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_signup" />
@@ -34,9 +35,6 @@
         <activity
             android:name=".ListActivity"
             android:label="@string/title_activity_list" />
-        <activity
-            android:name=".DetailActivity"
-            android:label="@string/title_activity_detail" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

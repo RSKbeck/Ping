@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -101,8 +102,8 @@ public class ListFragment extends Fragment {
                      .commit();
                      } else {**/
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra(EventDetail.ARG_ITEM_ID, holder.mEvent.getID());
+                    Intent intent = new Intent(context, MapsActivity.class);
+                    intent.putExtra(EventList.ARG_ITEM_ID, holder.mEvent.getID());
 
                     context.startActivity(intent);
                 }
@@ -133,9 +134,14 @@ public class ListFragment extends Fragment {
                 mEvent = evt;
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(evt.getTime());
-                mTimeView.setText(cal.getTime().toString());
+                mTimeView.setText(formatTime(cal));
                 mEventView.setText(evt.getTitle());
                 mDescView.setText(evt.getDetails());
+            }
+
+            private String formatTime(Calendar cal) {
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm a");
+                return sdf.format(cal.getTime());
             }
 
             @Override
