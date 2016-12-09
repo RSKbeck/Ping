@@ -22,6 +22,8 @@
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_signup" />
+
+        <!-- Replace With Map Activity To Test Visually -->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

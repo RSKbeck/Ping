@@ -74,6 +74,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mAuth = FirebaseAuth.getInstance();
         circleMap = new ArrayMap<String, String>();
 
+        //If Two Panel
+        if (findViewById(R.id.item_detail_container) != null) {
+            ListFragment listFragment = new ListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.item_detail_container, listFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+
         //Sliding Up Bar Setup
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
