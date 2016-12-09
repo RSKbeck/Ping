@@ -2,7 +2,11 @@
     <item
         android:id="@+id/menu_list"
         android:title="List"/>
+
+    <!-- Commenting out Settings Until We need it -->
+    <!--
     <item
         android:id="@+id/menu_settings"
         android:title="Settings"/>
+     -->
 </menu>

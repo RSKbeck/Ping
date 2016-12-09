@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,7 +63,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isAdding;
     private SlidingUpPanelLayout mLayout;
     private TextView mSlideUpTitle;
-    private TextView mSlideUpUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mSlideUpTitle = (TextView) findViewById(R.id.name);
-        mSlideUpUser = (TextView) findViewById(R.id.by_user);
         mLayout.setAnchorPoint(.7f);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -187,7 +186,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 mSlideUpTitle.setText(evt.getTitle());
-                mSlideUpUser.setText("By: " + evt.getCreator() + "\nAt: " + cal.getTime().toString() + "\n\n" + evt.getDetails());
+                ((TextView) findViewById(R.id.slide_creator)).setText("Creator: " + evt.getCreator());
+                ((TextView) findViewById(R.id.slide_time)).setText("\nTime: " + evt.getTime());
+                ((TextView) findViewById(R.id.slide_latitude)).setText("\nLatitude: " + evt.getLatitude());
+                ((TextView) findViewById(R.id.slide_creator)).setText("Longitude: " + evt.getLongitude());
+                ((TextView) findViewById(R.id.slide_description)).setText("\nDescription: " + evt.getDetails());
 
 
             }
