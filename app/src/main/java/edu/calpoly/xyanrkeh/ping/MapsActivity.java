@@ -248,6 +248,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         redrawCircles();
     }
 
+    @Override
+    public void onBackPressed() {
+        mAuth.signOut();
+        finish();
+        return;
+    }
+
     private void showPanel(String id, SlidingUpPanelLayout.PanelState state) {
         final String evtID = id;
         Event evt = EventList.events.get(id);

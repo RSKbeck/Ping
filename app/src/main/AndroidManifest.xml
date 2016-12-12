@@ -19,7 +19,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_signup" />
